@@ -7,35 +7,35 @@ void sys_tick_handler(void) {
 }
 
 void _usleep(uint32_t delay) {
-	uint32_t wake = system_millis + delay;
-	while (wake > system_millis);
+  uint32_t wake = system_millis + delay;
+  while (wake > system_millis);
 }
 
 void _msleep(uint32_t delay) {
-	_usleep(delay * 1000);
+  _usleep(delay * 1000);
 }
 
 int _write(int file, char *ptr, int len) {
-	int i;
+  int i;
 
-	if (file == STDOUT_FILENO || file == STDERR_FILENO) {
-		for (i = 0; i < len; i++) {
-			if (ptr[i] == '\n') {
-				usart_send_blocking(USART2, '\r');
-			}
-			usart_send_blocking(USART2, ptr[i]);
-		}
-		return i;
-	}
-	errno = EIO;
-	return -1;
+  if (file == STDOUT_FILENO || file == STDERR_FILENO) {
+    for (i = 0; i < len; i++) {
+      if (ptr[i] == '\n') {
+        usart_send_blocking(USART2, '\r');
+      }
+      usart_send_blocking(USART2, ptr[i]);
+    }
+    return i;
+  }
+  errno = EIO;
+  return -1;
 }
 
 void systick_setup(void) {
   systick_set_reload(168);
-	systick_set_clocksource(STK_CSR_CLKSOURCE_AHB);
-	systick_counter_enable();
-	systick_interrupt_enable();
+  systick_set_clocksource(STK_CSR_CLKSOURCE_AHB);
+  systick_counter_enable();
+  systick_interrupt_enable();
 }
 
 
@@ -52,11 +52,11 @@ void hw_init(void) {
   
   rcc_periph_clock_enable(RCC_USART2);
   usart_set_baudrate(USART2, 115200);
-	usart_set_databits(USART2, 8);
-	usart_set_stopbits(USART2, USART_STOPBITS_1);
-	usart_set_mode(USART2, USART_MODE_TX_RX);
-	usart_set_parity(USART2, USART_PARITY_NONE);
-	usart_set_flow_control(USART2, USART_FLOWCONTROL_NONE);
+  usart_set_databits(USART2, 8);
+  usart_set_stopbits(USART2, USART_STOPBITS_1);
+  usart_set_mode(USART2, USART_MODE_TX_RX);
+  usart_set_parity(USART2, USART_PARITY_NONE);
+  usart_set_flow_control(USART2, USART_FLOWCONTROL_NONE);
   
   usart_enable(USART2);
   
