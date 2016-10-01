@@ -178,7 +178,7 @@ static void continue_mode(void) {
 }
 
 static int16_t input_temp(void) {
-  printf("Type degrees in celsium (Example: 10 or -10, etc.). Must be -55 < t < 125 \n");
+  printf("Type degrees in celsius (Example: 10 or -10, etc.). Must be -55 < t < 125 \n");
   
   char c;
   uint8_t max_length = 5;
