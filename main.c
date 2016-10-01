@@ -219,6 +219,7 @@ static void setTL(void) {
   int16_t temp;
   
   do {
+    printf("\n");
     temp = input_temp();
   } while (temp < -55 || temp > 125);
   
