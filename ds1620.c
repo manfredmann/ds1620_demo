@@ -81,8 +81,6 @@ uint8_t ds_read_byte(void) {
     
     if (gpio_get(DS_GPIO, DS_DQ)) {
       data |= (1 << i);
-    } else {
-      data |= (0 << i);
     }
   }
   
@@ -104,8 +102,6 @@ uint16_t ds_read_nine(void) {
     
     if (gpio_get(DS_GPIO, DS_DQ)) {
       data |= (1 << i);
-    } else {
-      data |= (0 << i);
     }
   }
   return data;
@@ -180,11 +176,11 @@ int16_t ds_get_th(void) {
   return convert_9bit_16bit(th) >> 1;
 }
 
-void ds_set_th(int16_t th) {
+void ds_set_th(int16_t temp) {
   ds_cs();
   
   ds_send_byte(DS_CMD_WRITE_TH);
-  ds_send_nine(convert_16bit_9bit(th << 1));
+  ds_send_nine(convert_16bit_9bit(temp << 1));
   
   ds_dcs();
 }
@@ -200,29 +196,29 @@ int16_t ds_get_tl(void) {
   return convert_9bit_16bit(tl) >> 1;
 }
 
-void ds_set_tl(int16_t tl) {
+void ds_set_tl(int16_t temp) {
   ds_cs();
   
   ds_send_byte(DS_CMD_WRITE_TL);
-  ds_send_nine(convert_16bit_9bit(tl << 1));
+  ds_send_nine(convert_16bit_9bit(temp << 1));
   
   ds_dcs();
 }
 
 void ds_start_conv(void) {
-	ds_cs();
+  ds_cs();
 
-	ds_send_byte(DS_CMD_START_CNV);
+  ds_send_byte(DS_CMD_START_CNV);
 
-	ds_dcs();
+  ds_dcs();
 }
 
 void ds_stop_conv(void) {
-	ds_cs();
+  ds_cs();
 
-	ds_send_byte(DS_CMD_STOP_CNV);
+  ds_send_byte(DS_CMD_STOP_CNV);
 
-	ds_dcs();
+  ds_dcs();
 }
 
 ds_config ds_read_config(void) {

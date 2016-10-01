@@ -4,12 +4,12 @@
 #include "hw.h"
 #include <math.h>
 
-//GPIO
+// GPIO
 #define DS_GPIO_RCC RCC_GPIOB
-#define DS_GPIO GPIOB
-#define DS_RST GPIO12
-#define DS_CLK GPIO13
-#define DS_DQ  GPIO11
+#define DS_GPIO     GPIOB
+#define DS_RST      GPIO12
+#define DS_CLK      GPIO13
+#define DS_DQ       GPIO11
 
 // DS1620 Commands
 #define DS_CMD_READ_TMP  0xAA
@@ -32,7 +32,7 @@
 #define DS_FLAG_CPU   0x02
 #define DS_FLAG_1SHOT 0x01
 
-//CONFIG/STATUS Register structure
+// CONFIG/STATUS Register structure
 typedef struct {
   bool done;
   bool thf;
@@ -51,6 +51,7 @@ uint16_t  ds_read_nine(void);
 
 void      ds_cs(void);
 void      ds_dcs(void);
+
 void      ds_start_conv(void);
 void      ds_stop_conv(void);
 
@@ -61,9 +62,9 @@ ds_config ds_read_config(void);
 void      ds_write_config(ds_config config);
 double    ds_get_temp(void);
 int16_t   ds_get_th(void);
-void      ds_set_th(int16_t th);
+void      ds_set_th(int16_t temp);
 int16_t   ds_get_tl(void);
-void      ds_set_tl(int16_t tl);
+void      ds_set_tl(int16_t temp);
 
 ds_config ds_byte_to_conf(uint8_t byte);
 uint8_t   ds_conf_to_byte(ds_config config);
