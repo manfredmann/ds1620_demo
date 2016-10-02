@@ -7,7 +7,7 @@ static char get_char(uint32_t usart) {
   return usart_recv_blocking(usart);
 }
 
-static void printf_config(ds_config config) {
+static void print_config(ds_config config) {
   printf("DONE: %c",      config.done ? '1' : '0');
   printf(" THF: %c",      config.thf ? '1' : '0');
   printf(" TLF: %c",      config.tlf ? '1' : '0');
