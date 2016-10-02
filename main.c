@@ -3,7 +3,6 @@
 #include <stdlib.h>
 
 static char get_char(uint32_t usart) {
-  usart_wait_recv_ready(usart);
   return usart_recv_blocking(usart);
 }
 
@@ -51,12 +50,12 @@ static void print_menu(void) {
 
 static void write_conf(ds_config config) {
   printf("Current CONFIG =\t");
-  printf_config(config);
+  print_config(config);
   
   ds_write_config(config);
   
   printf("New CONFIG =\t\t");
-  printf_config(config);
+  print_config(config);
 }
 
 static void write_default_conf(void) {
@@ -72,50 +71,50 @@ static void write_default_conf(void) {
 
 static void toggle_conf_cpu(ds_config config) {
   printf("Current CONFIG =\t");
-  printf_config(config);
+  print_config(config);
   
   config.cpu = !config.cpu;
   
   ds_write_config(config);
   
   printf("New CONFIG =\t\t");
-  printf_config(config);
+  print_config(config);
 }
 
 static void toggle_conf_oneshot(ds_config config) {
   printf("Current CONFIG =\t");
-  printf_config(config);
+  print_config(config);
   
   config.oneshot = !config.oneshot;
   
   ds_write_config(config);
   
   printf("New CONFIG =\t\t");
-  printf_config(config);
+  print_config(config);
 }
 
 static void reset_thf(ds_config config) {
   printf("Current CONFIG =\t");
-  printf_config(config);
+  print_config(config);
   
   config.thf = false;
   
   ds_write_config(config);
   
   printf("New CONFIG =\t\t");
-  printf_config(config);
+  print_config(config);
 }
 
 static void reset_tlf(ds_config config) {
   printf("Current CONFIG =\t");
-  printf_config(config);
+  print_config(config);
   
   config.tlf = false;
   
   ds_write_config(config);
   
   printf("New CONFIG =\t\t");
-  printf_config(config);
+  print_config(config);
 }
 
 static void one_shot_mode(void) {
@@ -136,7 +135,7 @@ static void one_shot_mode(void) {
     
     config = ds_read_config();
     printf("CONFIG =\t");
-    printf_config(config);
+    print_config(config);
     _msleep(100);
   } while (config.done == false);
   
@@ -167,7 +166,7 @@ static void continue_mode(void) {
     off_green_led();
     
     printf("CONFIG = ");
-    printf_config(config);
+    print_config(config);
 
     if (usart_recv(USART2) == ' ')
       break;
