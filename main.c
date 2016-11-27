@@ -168,7 +168,7 @@ static void one_shot_mode(void) {
   off_orange_led();
 }
 
-static void continue_mode(void) {
+static void continuous_mode(void) {
   printf("\n========================== Continuous mode =============================\n");
   ds_start_conv();
   
@@ -217,7 +217,7 @@ static int16_t input_temp(void) {
   return atoi(&line[0]);
 }
 
-static void setTH(void) {
+static void set_TH(void) {
   printf("\n=============================== Set TH =================================");
   
   int16_t temp;
@@ -233,7 +233,7 @@ static void setTH(void) {
   printf("\nTH set to:\t%d c\n", th);
 }
 
-static void setTL(void) {
+static void set_TL(void) {
   printf("\n=============================== Set TL =================================");
   
   int16_t temp;
@@ -275,11 +275,11 @@ int main(void) {
       case '0': write_default_conf(); break;
       case '1': toggle_conf_cpu(config); break;
       case '2': toggle_conf_oneshot(config); break;
-      case '3': setTH(); break;
-      case '4': setTL(); break;
+      case '3': set_TH(); break;
+      case '4': set_TL(); break;
       case '5': reset_thf(config); break;
       case '6': reset_tlf(config); break;
-      case '7': continue_mode(); break;
+      case '7': continuous_mode(); break;
       case '8': one_shot_mode(); break;
       default : continue;
     }
