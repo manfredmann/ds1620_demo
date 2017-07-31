@@ -142,6 +142,8 @@ static void one_shot_mode(void) {
   printf("\n=========================== One shot mode ==============================\n");
   
   on_orange_led();
+
+  ds_stop_conv();
   
   ds_start_conv();
   
@@ -170,6 +172,7 @@ static void one_shot_mode(void) {
 
 static void continuous_mode(void) {
   printf("\n========================== Continuous mode =============================\n");
+
   ds_start_conv();
   
   ds_config config;
@@ -194,6 +197,7 @@ static void continuous_mode(void) {
     _msleep(750);
     counter++;
   }
+  
   ds_stop_conv();
 }
 
