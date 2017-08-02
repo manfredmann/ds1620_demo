@@ -65,6 +65,7 @@ static void print_menu(void) {
   printf("6: Reset TLF\n");
   printf("7: Continuous mode\n");
   printf("8: One shot mode\n");
+  printf("9: Power-safe mode test");
   printf("\n");
   printf("Type number, or press any key to read registers again\n");
 }
@@ -201,6 +202,28 @@ static void continuous_mode(void) {
   ds_stop_conv();
 }
 
+static void power_safe_mode_test() {
+  write_default_conf();
+
+  int counter = 0;
+
+  ds_start_conv_ps();
+
+  while (true) {
+    counter++;
+    on_green_led();
+    
+    double temp = ds_get_temp();
+    printf("%d:\tTemp = %.1f c\n", counter, temp);
+    
+    off_green_led();
+
+    if (usart_recv(USART2) == ' ')
+      break;
+    _msleep(1200);   
+  }
+}
+
 static int16_t input_temp(void) {
   printf("Type degrees in celsius (Example: 10 or -10, etc.). Must be -55 < t < 125 \n");
   
@@ -285,6 +308,7 @@ int main(void) {
       case '6': reset_tlf(config); break;
       case '7': continuous_mode(); break;
       case '8': one_shot_mode(); break;
+      case '9': power_safe_mode_test(); break;
       default : continue;
     }
     

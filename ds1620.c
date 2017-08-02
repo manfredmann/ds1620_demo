@@ -242,6 +242,16 @@ void ds_stop_conv(void) {
   ds_dcs();
 }
 
+void ds_start_conv_ps(void) {
+  gpio_clear(DS_GPIO, DS_RST);
+  gpio_set(DS_GPIO, DS_CLK); 
+}
+
+void ds_stop_conv_ps(void) {
+  gpio_set(DS_GPIO, DS_RST);
+  gpio_set(DS_GPIO, DS_CLK); 
+}
+
 ds_config ds_read_config(void) {
   ds_cs();
   
