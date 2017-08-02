@@ -77,7 +77,6 @@ void      ds_start_conv(void);
 void      ds_stop_conv(void);
 
 void      ds_start_conv_ps(void);
-void      ds_stop_conv_ps(void);
 
 uint16_t  ds_read_temp(void);
 uint8_t   ds_read_counter(void);

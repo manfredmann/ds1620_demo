@@ -23,6 +23,25 @@
 #include "ds1620.h"
 #include <stdlib.h>
 
+static char     get_char(uint32_t usart);
+static void     print_config(ds_config config);
+static void     print_registers(ds_config config, int16_t th, int16_t tl);
+static void     print_menu(void);
+static void     write_conf(ds_config config);
+static void     write_default_conf(void);
+static void     toggle_conf_cpu(ds_config config);
+static void     toggle_conf_oneshot(ds_config config);
+static void     reset_thf(ds_config config);
+static void     reset_tlf(ds_config config);
+static void     one_shot_mode(void);
+static void     continuous_mode(void);
+static void     power_safe_mode(void);
+static int16_t  read_interval(void);
+static int16_t  read_temp(void);
+static int16_t  read_input(void);
+static void     set_TH(void);
+static void     set_TL(void);
+
 static char get_char(uint32_t usart) {
   return usart_recv_blocking(usart);
 }
@@ -65,7 +84,7 @@ static void print_menu(void) {
   printf("6: Reset TLF\n");
   printf("7: Continuous mode\n");
   printf("8: Oneshot mode\n");
-  printf("9: Power-safe mode test");
+  printf("9: Power-safe mode");
   printf("\n");
   printf("Type number, or press any key to read registers again\n");
 }
@@ -202,33 +221,68 @@ static void continuous_mode(void) {
   ds_stop_conv();
 }
 
-static void power_safe_mode_test() {
+static void power_safe_mode(void) {
+  uint32_t interval = (uint32_t) read_interval() * 1000;
+
+  printf("Update interval: %ld ms\n", interval);
   write_default_conf();
+
+  ds_config config;
 
   int counter = 0;
 
-  ds_start_conv_ps();
-
   while (true) {
+    ds_start_conv_ps();
+
     counter++;
+    _msleep(interval);   
+
     on_green_led();
     
+    config = ds_read_config();
+
     double temp = ds_get_temp();
-    printf("%d:\tTemp = %.1f c\n", counter, temp);
-    
+    printf("%d:\tTemp = %.1f c\t", counter, temp);
+    printf("CONFIG = ");
+    print_config(config);
+
     off_green_led();
 
     if (usart_recv(USART2) == ' ')
       break;
-    _msleep(1200);   
   }
 }
 
-static int16_t input_temp(void) {
-  printf("Type degrees in celsius (Example: 10 or -10, etc.). Must be -55 < t < 125 \n");
-  
+static int16_t read_interval(void) {
+  printf("\nType update interval. Must be from 1 to 120 seconds");
+
+  int16_t interval = 0;
+
+  do {
+    printf("\n");
+    interval = read_input();
+  } while (interval < 1 || interval > 120);
+
+  printf("\n");
+  return interval;
+}
+
+static int16_t read_temp(void) {
+  printf("\nType degrees in celsius (Example: 10 or -10, etc.). Must be -55 < t < 125");
+
+  int16_t temp = 0;
+
+  do {
+    printf("\n");
+    temp = read_input();
+  } while (temp < -55 || temp > 125);
+
+  return temp;
+}
+
+static int16_t read_input(void) {
   char c;
-  uint8_t max_length = 5;
+  uint8_t max_length = 6;
   uint8_t i = 0;
   char line[max_length];
   
@@ -247,12 +301,7 @@ static int16_t input_temp(void) {
 static void set_TH(void) {
   printf("\n=============================== Set TH =================================");
   
-  int16_t temp;
-  
-  do {
-    printf("\n");
-    temp = input_temp();
-  } while (temp < -55 || temp > 125);
+  int16_t temp = read_temp();
   
   ds_set_th(temp);
   int16_t th = ds_get_th();
@@ -263,13 +312,8 @@ static void set_TH(void) {
 static void set_TL(void) {
   printf("\n=============================== Set TL =================================");
   
-  int16_t temp;
-  
-  do {
-    printf("\n");
-    temp = input_temp();
-  } while (temp < -55 || temp > 125);
-  
+  int16_t temp = read_temp();
+    
   ds_set_tl(temp);
   int16_t th = ds_get_tl();
   
@@ -308,7 +352,7 @@ int main(void) {
       case '6': reset_tlf(config); break;
       case '7': continuous_mode(); break;
       case '8': one_shot_mode(); break;
-      case '9': power_safe_mode_test(); break;
+      case '9': power_safe_mode(); break;
       default : continue;
     }
     
