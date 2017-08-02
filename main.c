@@ -64,7 +64,7 @@ static void print_menu(void) {
   printf("5: Reset THF\n");
   printf("6: Reset TLF\n");
   printf("7: Continuous mode\n");
-  printf("8: One shot mode\n");
+  printf("8: Oneshot mode\n");
   printf("9: Power-safe mode test");
   printf("\n");
   printf("Type number, or press any key to read registers again\n");
@@ -140,7 +140,7 @@ static void reset_tlf(ds_config config) {
 }
 
 static void one_shot_mode(void) {
-  printf("\n=========================== One shot mode ==============================\n");
+  printf("\n============================ Oneshot mode ==============================\n");
   
   on_orange_led();
 
