@@ -325,6 +325,8 @@ int main(void) {
   ds_gpio_setup();
   
   _msleep(250);
+
+  digit_init();
   
   while (1) {
     usart_send_blocking(USART2, 27);
