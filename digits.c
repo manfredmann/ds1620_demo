@@ -28,7 +28,7 @@ void digits_init(void) {
 
   timer_set_mode(TIM2, TIM_CR1_CKD_CK_INT, TIM_CR1_CMS_EDGE, TIM_CR1_DIR_UP);
   
-  timer_set_prescaler(TIM2, 5);
+  timer_set_prescaler(TIM2, 6);
 
   timer_continuous_mode(TIM2);
 
@@ -112,12 +112,10 @@ void digits_set(double data) {
     int d = abs((float) (modf(((int) data) / pow(10, i + 1), &intp) * 10));
     d_data.values[i+1] = d;
   }
-
 }
 
 void tim2_isr(void) {
   if (timer_get_flag(TIM2, TIM_SR_UIF)) {
-    /* Clear compare interrupt flag. */
     timer_clear_flag(TIM2, TIM_SR_UIF);
     switch(digit) {
       case 0: {
