@@ -28,7 +28,7 @@ void digits_init(void) {
 
   timer_set_mode(TIM2, TIM_CR1_CKD_CK_INT, TIM_CR1_CMS_EDGE, TIM_CR1_DIR_UP);
   
-  timer_set_prescaler(TIM2, 6);
+  timer_set_prescaler(TIM2, 7);
 
   timer_continuous_mode(TIM2);
 
