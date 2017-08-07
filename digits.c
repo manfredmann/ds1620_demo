@@ -8,6 +8,7 @@ void digits_init(void) {
 
   digits_clear();
 
+  rcc_periph_clock_enable(RCC_DIGIT_REG_RESET_GPIO);
   rcc_periph_clock_enable(RCC_DIGIT_GPIO);
   rcc_periph_clock_enable(RCC_DIGIT_REG_GPIO);
   rcc_periph_clock_enable(RCC_DIGIT_REG_C2_GPIO);
@@ -16,6 +17,8 @@ void digits_init(void) {
   gpio_mode_setup(DIGIT_GPIO, GPIO_MODE_OUTPUT, GPIO_PUPD_PULLUP, DIGIT_D2);
   gpio_mode_setup(DIGIT_GPIO, GPIO_MODE_OUTPUT, GPIO_PUPD_PULLUP, DIGIT_D3);
   gpio_mode_setup(DIGIT_GPIO, GPIO_MODE_OUTPUT, GPIO_PUPD_PULLUP, DIGIT_D4);
+
+  gpio_mode_setup(DIGIT_REG_RESET_GPIO, GPIO_MODE_OUTPUT, GPIO_PUPD_PULLUP, DIGIT_REG_RESET);
 
   gpio_mode_setup(DIGIT_REG_C2_GPIO, GPIO_MODE_OUTPUT, GPIO_PUPD_PULLUP, DIGIT_REG_C2);
 
@@ -28,7 +31,7 @@ void digits_init(void) {
 
   timer_set_mode(TIM2, TIM_CR1_CKD_CK_INT, TIM_CR1_CMS_EDGE, TIM_CR1_DIR_UP);
   
-  timer_set_prescaler(TIM2, 7);
+  timer_set_prescaler(TIM2, 5);
 
   timer_continuous_mode(TIM2);
 
@@ -39,6 +42,13 @@ void digits_init(void) {
   //timer_disable_oc_clear(TIM2, TIM_OC1);
   //timer_enable_oc_preload(TIM2, TIM_OC1);
   timer_set_oc_slow_mode(TIM2, TIM_OC1);
+
+  gpio_set(DIGIT_REG_RESET_GPIO, DIGIT_REG_RESET);
+  asm("nop");
+  gpio_clear(DIGIT_REG_RESET_GPIO, DIGIT_REG_RESET);
+  asm("nop");
+  gpio_set(DIGIT_REG_RESET_GPIO, DIGIT_REG_RESET);
+  asm("nop");
 
   timer_enable_counter(TIM2);
   timer_enable_irq(TIM2, TIM_DIER_UIE);
@@ -72,6 +82,7 @@ static void digits_out(uint8_t data, bool dot) {
 
     gpio_clear(DIGIT_REG_GPIO, DIGIT_REG_C1);
     asm("nop");
+
 
     gpio_set(DIGIT_REG_GPIO, DIGIT_REG_C1);
     asm("nop");
@@ -116,44 +127,44 @@ void digits_set(double data) {
 
 void tim2_isr(void) {
   if (timer_get_flag(TIM2, TIM_SR_UIF)) {
-    timer_clear_flag(TIM2, TIM_SR_UIF);
     switch(digit) {
       case 0: {
-        digits_out(d_data.values[0], false);
         gpio_set(DIGIT_GPIO, DIGIT_D1);
         gpio_clear(DIGIT_GPIO, DIGIT_D2);
         gpio_clear(DIGIT_GPIO, DIGIT_D3);
         gpio_clear(DIGIT_GPIO, DIGIT_D4);
+        digits_out(d_data.values[0], false);
         digit = 1;
         break;
       }
       case 1: {
-        digits_out(d_data.values[1], true);
         gpio_clear(DIGIT_GPIO, DIGIT_D1);
         gpio_set(DIGIT_GPIO, DIGIT_D2);
         gpio_clear(DIGIT_GPIO, DIGIT_D3);
         gpio_clear(DIGIT_GPIO, DIGIT_D4);
+        digits_out(d_data.values[1], true);
         digit = 2;
         break;
       }
       case 2: {
-        digits_out(d_data.values[2], false);
         gpio_clear(DIGIT_GPIO, DIGIT_D1);
         gpio_clear(DIGIT_GPIO, DIGIT_D2);
         gpio_set(DIGIT_GPIO, DIGIT_D3);
         gpio_clear(DIGIT_GPIO, DIGIT_D4);
+        digits_out(d_data.values[2], false);
         digit = 3;
         break;
       }
       case 3: {
-        digits_out(d_data.values[3], false);
         gpio_clear(DIGIT_GPIO, DIGIT_D1);
         gpio_clear(DIGIT_GPIO, DIGIT_D2);
         gpio_clear(DIGIT_GPIO, DIGIT_D3);
         gpio_set(DIGIT_GPIO, DIGIT_D4);
+        digits_out(d_data.values[3], false);
         digit = 0;
         break;
       }
     }
+    timer_clear_flag(TIM2, TIM_SR_UIF);
   }
 }
