@@ -20,6 +20,7 @@
 */
 
 #include "hw.h"
+#include "digits.h"
 #include "ds1620.h"
 #include <stdlib.h>
 
@@ -206,7 +207,9 @@ static void continuous_mode(void) {
     
     double temp = ds_get_temp();
     printf("%d:\tTemp = %.1f c\t", counter, temp);
-    
+
+    digits_set(temp);  
+
     off_green_led();
     
     printf("CONFIG = ");
@@ -218,6 +221,7 @@ static void continuous_mode(void) {
     counter++;
   }
   
+  digits_clear();
   ds_stop_conv();
 }
 
@@ -242,14 +246,19 @@ static void power_safe_mode(void) {
     config = ds_read_config();
 
     double temp = ds_get_temp();
+
+    digits_set(temp);
+
     printf("%d:\tTemp = %.1f c\t", counter, temp);
     printf("CONFIG = ");
     print_config(config);
 
     off_green_led();
 
-    if (usart_recv(USART2) == ' ')
+    if (usart_recv(USART2) == ' ') {
+      digits_clear();
       break;
+    }
   }
 }
 
@@ -326,7 +335,7 @@ int main(void) {
   
   _msleep(250);
 
-  digit_init();
+  digits_init();
   
   while (1) {
     usart_send_blocking(USART2, 27);

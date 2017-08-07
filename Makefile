@@ -1,6 +1,6 @@
 BINARY = main
 
-OBJS = hw.o ds1620.o
+OBJS = hw.o ds1620.o digits.o
 
 OPENCM3_DIR = ./lib/libopencm3
 

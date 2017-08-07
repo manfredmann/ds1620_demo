@@ -260,25 +260,23 @@ ds_config ds_read_config(void) {
   return ds_byte_to_conf(config_r);
 }
 
-void ds_write_config(ds_config config) {
-  
+void ds_write_config(ds_config config) {  
   ds_cs();
   
   ds_send_byte(DS_CMD_WRITE_CNF);
   ds_send_byte(ds_conf_to_byte(config));
   
   ds_dcs();
-  
 }
 
 ds_config ds_byte_to_conf(uint8_t byte) {
   ds_config config;
   
-  config.done     = ((byte & DS_FLAG_DONE) == 0) ? false : true;
-  config.thf      = ((byte & DS_FLAG_THF) == 0) ? false : true;
-  config.tlf      = ((byte & DS_FLAG_TLF) == 0) ? false : true;
-  config.nvb      = ((byte & DS_FLAG_NVB) == 0) ? false : true;
-  config.cpu      = ((byte & DS_FLAG_CPU) == 0) ? false : true;
+  config.done     = ((byte & DS_FLAG_DONE) == 0)  ? false : true;
+  config.thf      = ((byte & DS_FLAG_THF) == 0)   ? false : true;
+  config.tlf      = ((byte & DS_FLAG_TLF) == 0)   ? false : true;
+  config.nvb      = ((byte & DS_FLAG_NVB) == 0)   ? false : true;
+  config.cpu      = ((byte & DS_FLAG_CPU) == 0)   ? false : true;
   config.oneshot  = ((byte & DS_FLAG_1SHOT) == 0) ? false : true;
   return config;
 }
