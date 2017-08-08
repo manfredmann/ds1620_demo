@@ -31,17 +31,12 @@ void digits_init(void) {
 
   timer_set_mode(TIM2, TIM_CR1_CKD_CK_INT, TIM_CR1_CMS_EDGE, TIM_CR1_DIR_UP);
   
-  timer_set_prescaler(TIM2, 5);
+  timer_set_prescaler(TIM2, 49999);
 
   timer_continuous_mode(TIM2);
 
-  int v = 59999;
+  int v = 8;
   timer_set_period(TIM2, v);
-  timer_set_oc_value(TIM2, TIM_OC1, v / 2);
-
-  //timer_disable_oc_clear(TIM2, TIM_OC1);
-  //timer_enable_oc_preload(TIM2, TIM_OC1);
-  timer_set_oc_slow_mode(TIM2, TIM_OC1);
 
   gpio_set(DIGIT_REG_RESET_GPIO, DIGIT_REG_RESET);
   asm("nop");
@@ -165,6 +160,6 @@ void tim2_isr(void) {
         break;
       }
     }
-    timer_clear_flag(TIM2, TIM_SR_UIF);
+    timer_clear_flag(TIM2, TIM_SR_UIF );
   }
 }

@@ -193,6 +193,9 @@ static void one_shot_mode(void) {
 
 static void continuous_mode(void) {
   printf("\n========================== Continuous mode =============================\n");
+  uint32_t interval = (uint32_t) read_interval() * 1000;
+
+  printf("Update interval: %ld ms\n", interval);
 
   ds_start_conv();
   
@@ -217,7 +220,7 @@ static void continuous_mode(void) {
 
     if (usart_recv(USART2) == ' ')
       break;
-    _msleep(750);
+    _msleep(interval);
     counter++;
   }
   
