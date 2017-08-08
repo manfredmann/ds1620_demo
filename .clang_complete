@@ -1,0 +1,9 @@
+-std=c11
+-D STM32F4
+-I./lib/libopencm3/include
+-I./lib/libopencm3/include/libopencm3
+-I./lib/libopencm3/include/libopencm3/stm32
+-I./lib/libopencm3/include/libopencm3/stm32/f4
+-I./lib/libopencm3/include/libopencm3/stm32/common
+-I./lib/libopencm3/include/libopencmsis
+-I./lib/libopencm3/include/libopencmsis/stm32/f4
